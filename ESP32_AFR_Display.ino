@@ -53,46 +53,6 @@ void drawBar() {
   tft.fillRect(120, 90, 120, 45, TFT_BLUE);
 }
 
-//void simulateValues() {
-//  //generate simulated AFR values
-//  const float MIN_AFR = 12.0;
-//  const float MAX_AFR = 17.5;
-//  float afrRange = (MAX_AFR - MIN_AFR);
-//  long updateFreq = 100;
-//  static long lastUpdate = millis();
-//  static float sinAFR = 0;
-//  static float sinVar = 0;
-//  float varInc = 1;
-//  float targetInc = .5;
-//  const float VAR_RANGE = 1;
-//  float AFRMedian = MIN_AFR + (afrRange / 2);
-//
-//  if (millis() - lastUpdate > updateFreq) {
-//    // Target AFR is a floating point number that ranges between 11.5 and 19
-//    // use a sin curve to continuously vary this value
-//    // Actual will vary around the target +- afrRange
-//    // First generate new simulated TargetAFR
-//    targetAFR = AFRMedian + (sin(sinAFR / 10) * (afrRange / 2));
-//    Serial.print("Target AFR: "); Serial.println(targetAFR);
-//    //strTargetAFR = String(targetAFR, 1);
-//    sinAFR = sinAFR + targetInc;
-//    if (sinAFR > 65) {
-//      sinAFR = 0;
-//    }
-//    //generate a simulated variance from target.  This will be used to calculate simulated actual afr
-//    //simulated variance will be a sin curve but different period from targetafr
-//    afrVar = sin(sinVar / 10) * VAR_RANGE;
-//    Serial.print("AFR variance: "); Serial.println(afrVar);
-//    //actualAFR = targetAFR + afrVar;
-//    Serial.print("actual AFR: "); Serial.println(actualAFR);
-//    sinVar = sinVar + varInc;
-//    if (sinVar > 65) {
-//      sinVar = 0;
-//    }
-//    lastUpdate = millis();
-//  }
-//}
-
 void setup() {
   Serial.begin(115200);
   Serial2.begin(115200, SERIAL_8N1, sRX, sTX); //Serial port for connecting to Speeduino
@@ -122,10 +82,7 @@ void setup() {
   drawBar();
 }
 
-
 void loop() {
-  // put your main code here, to run repeatedly:
-  //simulateValues();
   getAFR();
   showAFR();
 
