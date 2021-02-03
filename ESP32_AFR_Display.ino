@@ -1,12 +1,26 @@
-/*
+/*!
    AFR monitor using TTGO ESP 32 module with 240 x 135 TFT full colour display
    Use ESP 32 Dev Module board definition.
 */
 
 #include <TFT_eSPI.h>
 #include<SPI.h>
-//#include "Free_Fonts.h" // Include the header file attached to this sketch
 #include <User_Setup.h>
+#include <AceButton.h>          // for the encoder button
+#include <WiFi.h> 
+
+WiFiClient webClient;
+
+// make buttons
+using namespace ace_button;
+const uint8_t TOP_BUTTON = 0;
+const uint8_t BOTTOM_BUTTON = 35;
+AceButton topButton(TOP_BUTTON);
+AceButton bottomButton(BOTTOM_BUTTON);
+
+// Firmware update http locations
+#define URL_fw_Version "https://raw.githubusercontent.com/gshorten/GSCUpdates/master/ESP32_AFR_Display/bin_version.txt"
+#define URL_fw_Bin "https://raw.githubusercontent.com/gshorten/GSCUpdates/master/ESP32_AFR_Display/"
 
 float targetAFR;
 float actualAFR;
@@ -66,6 +80,19 @@ void setup() {
   tft.setCursor(0, 0);
   tft.setTextDatum(MC_DATUM);
 
+  // Setup buttons
+  // Buttons use the built-in pull up register.
+  pinMode(TOP_BUTTON, INPUT_PULLUP);
+  pinMode(BOTTOM_BUTTON, INPUT_PULLUP);
+   // Configure the ButtonConfig with the event handler, and enable all higher
+  // level events.
+  ButtonConfig* buttonConfig = ButtonConfig::getSystemButtonConfig();
+  buttonConfig->setEventHandler(handleEvent);       // button event handler
+  buttonConfig->setFeature(ButtonConfig::kFeatureClick);
+  buttonConfig->setFeature(ButtonConfig::kFeatureDoubleClick);
+  buttonConfig->setFeature(ButtonConfig::kFeatureLongPress);
+  buttonConfig->setFeature(ButtonConfig::kFeatureRepeatPress);
+
   // create sprite for AFR numeric display
   afrNum.setTextFont(8);
   afrNum.createSprite(200, 85);
@@ -85,5 +112,7 @@ void setup() {
 void loop() {
   getAFR();
   showAFR();
+  topButton.check();
+  bottomButton.check();
 
 }
