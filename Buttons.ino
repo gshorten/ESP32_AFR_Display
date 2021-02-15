@@ -1,11 +1,23 @@
+/*
+ * Functions to change the display
+ */
 
-void handleEvent(AceButton* button, uint8_t eventType, uint8_t buttonState) {
-
-  // Print out a message for all events, for both buttons.
+void handleTopButton(AceButton* button, uint8_t eventType, uint8_t buttonState) {
+  // not using this button right now, below is for diagnostics
   Serial.print(F("handleEvent(): pin: "));
   Serial.print(button->getPin());
   Serial.print(F("; eventType: "));
   Serial.print(eventType);
   Serial.print(F("; buttonState: "));
   Serial.println(buttonState);
+}
+
+void handleBottomButton(AceButton* button, uint8_t eventType, uint8_t buttonState) {
+ // cycle through modes when down button is pressed.  This changes the display shown
+ Serial.print("Bottom Button pressed");
+ 
+ g_Mode ++;       // button push increments mode variable.
+ if (g_Mode > 2){
+  g_Mode = 0;   // wrap around
+ }
 }
