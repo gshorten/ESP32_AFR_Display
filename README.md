@@ -6,12 +6,12 @@
  
  Using the bottom button on the ESP32 the display can be switched to show main loops per second or EGO correction +_ percent.
  
- This uses the SpeedData library ( https://github.com/gshorten/SpeedData) to get get the data from the Speeduino secondary interface.   For details on the Speeduino secondary interface: https://wiki.speeduino.com/en/Secondary_Serial_IO_interface.  The SpeedData library makes getting the data very easy.
+ This uses the SpeedData library ( https://github.com/gshorten/SpeedData) to get get the data from the Speeduino secondary interface.   For details on the Speeduino secondary interface: https://wiki.speeduino.com/en/Secondary_Serial_IO_interface.  The SpeedData library simplifies getting the data from the speeduino, there are methods to get actual afr, target afr, EGO, etc..
  
  The TTGO ESP32 module (http://www.lilygo.cn/prod_view.aspx?TypeId=50033&Id=1126&FId=t3:50033:3 )
  has an integrated TFT display, two buttons, integrated bluetooth and wifi, which makes it ideal for this application.  
  
- The code is setup for OTA updates via WiFi, the initial install has to be done via USB.
+ The code is setup for OTA updates via WiFi, but the initial install has to be done via USB.
  
  The ESP32 is hardwired to the Serial3 port on the Speeduino / Arduino, I am not  using bluetooth as I use that to connect the Speeduino to tunerstudio on my laptop.
  
