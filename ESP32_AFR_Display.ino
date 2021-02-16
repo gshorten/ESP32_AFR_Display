@@ -5,13 +5,13 @@
 
 #include <TFT_eSPI.h>
 #include <SPI.h>
-#include <User_Setup.h>       // don't know what this is, don't seem to need it
-#include <AceButton.h>          //!< for the encoder button
+#include <User_Setup.h>          // TFT display configuration file
+#include <AceButton.h>          // for the encoder button
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include <SpeedData.h>
+#include <SpeedData.h>      
 
 // Define two buttons, different configurations for each 
 using namespace ace_button;
@@ -22,7 +22,7 @@ ButtonConfig bottomConfig;
 AceButton topButton(&topConfig);
 AceButton bottomButton(&bottomConfig);
 
-// SpeedData object to get data from the speeduino
+// SpeedData object to get data from the speeduino.  Using Serial2 (defined in setup)
 SpeedData SData(&Serial2);
 
 // wifi 
@@ -56,9 +56,7 @@ void setup() {
   Serial2.begin(115200, SERIAL_8N1, sRX, sTX); //Serial port for connecting to Speeduino
   Serial.println("Start");
   
-  //SData.setSerial(&Serial2);
-
-  // connnect to wifi
+    // connnect to wifi
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -107,7 +105,7 @@ void setup() {
   tft.setCursor(0, 0);
   tft.setTextDatum(MC_DATUM);
 
-  //Setup buttons
+  //Setup buttons.  the TTGO ESP 32 module has two built in buttons (plus a reset).
   pinMode(TOP_BUTTON, INPUT_PULLUP);
   pinMode(BOTTOM_BUTTON, INPUT_PULLUP);
 
