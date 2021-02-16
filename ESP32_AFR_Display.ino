@@ -1,5 +1,4 @@
-/*! \brief Air Fuel Ratio (AFR) Gauge
-
+/* Air Fuel Ratio (AFR) Gauge
    AFR monitor using TTGO ESP 32 module with 240 x 135 TFT full colour display
    Use ESP 32 Dev Module board definition.
 */
@@ -24,7 +23,7 @@ AceButton topButton(&topConfig);
 AceButton bottomButton(&bottomConfig);
 
 // SpeedData object to get data from the speeduino
-SpeedData SData;
+SpeedData SData(&Serial2);
 
 // wifi 
 const char* ssid = "dfhome";
@@ -56,8 +55,8 @@ void setup() {
   Serial.begin(115200);
   Serial2.begin(115200, SERIAL_8N1, sRX, sTX); //Serial port for connecting to Speeduino
   Serial.println("Start");
-  Serial.println("Start");
-  SData.setSerial(&Serial2);
+  
+  //SData.setSerial(&Serial2);
 
   // connnect to wifi
   WiFi.mode(WIFI_STA);
