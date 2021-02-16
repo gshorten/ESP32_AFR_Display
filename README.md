@@ -21,7 +21,7 @@
  
  The code is self explanatory but email me if you have questions: geoff.shorten@shortens.ca.
  
- I'm not a professional coder so apologies for the hacky code.  But, it works :-)
+ I'm not a professional coder so apologies for the hacky code. Basically I learned c++ to do this project.   But, it works :-)
  
- See my other TTGO ESP32 based project, a portable Sonos music system controller: https://github.com/gshorten/ESP32-Sonos-Controller/blob/master/README.md
+ See my other ESP32 based project, a portable Sonos music system controller: https://github.com/gshorten/ESP32-Sonos-Controller/blob/master/README.md
  Currently documentation for this is sparse, I will update when I get time :-)
