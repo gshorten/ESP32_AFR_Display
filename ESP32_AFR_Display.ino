@@ -1,6 +1,7 @@
 /*! @brief Air Fuel Ratio (AFR) Gauge
    AFR monitor using TTGO ESP 32 module with 240 x 135 TFT full colour display
    Use ESP 32 Dev Module board definition.
+   Uses OTA updates.
 */
 
 #include <TFT_eSPI.h>
@@ -11,7 +12,7 @@
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include <SpeedData2.h>      
+#include <SpeedData.h>      
 
 /*! 
  * @brief   Define two buttons, different configurations for each.
@@ -25,11 +26,12 @@ AceButton topButton(&topConfig);
 AceButton bottomButton(&bottomConfig);
 
 // SpeedData object to get data from the speeduino.  Using Serial2 (defined in setup)
+// use reference operator ("&")!
 SpeedData SData(&Serial2);
 
 // wifi 
-const char* ssid = "dfhome";
-const char* password = "rentalguy";
+char* ssid = SECRET_SSID;
+char* password = SECRET_PWD;
 
 // tft display buffer
 uint16_t* tft_buffer = (uint16_t*) malloc( 26000 );  
