@@ -2,8 +2,15 @@
    Display Related Functions
 */
 
+/*!
+   @brief Updates the display with Speeduino data based on the mode, which is changed with
+   the bottom pushbutton
+
+   @param g_Mode
+   Global variable for display mode
+*/
 void updateDisplay() {
-  // update display based on current mode.  Mode is changed with bottomButton
+
   switch (g_Mode) {
     case MODE_AFR:
       showAFR();
@@ -20,6 +27,10 @@ void updateDisplay() {
   }
 }
 
+/*!
+   @brief   displays the current AFR and draws and indicator sprit to show the relative variance from the target AFR.
+*/
+
 void showAFR() {
   // displays the current AFR and a triangle on the bottom for AFR variance
   float afrVar;
@@ -28,6 +39,7 @@ void showAFR() {
   float actualAFR;
   float targetAFR;
 
+  // get actual and target afr, use SpeedData library (instance is SData)
   actualAFR = SData.getActualAFR();
   targetAFR = SData.getTargetAFR();
 

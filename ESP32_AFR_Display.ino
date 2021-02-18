@@ -1,4 +1,4 @@
-/* Air Fuel Ratio (AFR) Gauge
+/*! @brief Air Fuel Ratio (AFR) Gauge
    AFR monitor using TTGO ESP 32 module with 240 x 135 TFT full colour display
    Use ESP 32 Dev Module board definition.
 */
@@ -11,9 +11,11 @@
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include <SpeedData.h>      
+#include <SpeedData2.h>      
 
-// Define two buttons, different configurations for each 
+/*! 
+ * @brief   Define two buttons, different configurations for each.
+ */
 using namespace ace_button;
 const uint8_t TOP_BUTTON = 0;       //!< on board button above the USB-C port
 const uint8_t BOTTOM_BUTTON = 35;   //!< on board button below the USB-C port
