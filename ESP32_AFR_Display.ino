@@ -13,6 +13,7 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <SpeedData.h>      
+#include "arduino_secrets.h"
 
 /*! 
  * @brief   Define two buttons, different configurations for each.
