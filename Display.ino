@@ -31,6 +31,21 @@ void updateDisplay() {
    @brief   displays the current AFR and draws and indicator sprit to show the relative variance from the target AFR.
 */
 
+void showWarmup() {
+  // displays warmup enrichment
+  dispNum.fillSprite(TFT_BLACK);
+  int warmup = SData.getwarmup();     // Get latest Loops reading
+  warmup = warmup - 100;              // 0 will be no warmup enrichment, 100 will b 100%
+  dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
+  dispNum.setTextDatum(MC_DATUM);
+  dispNum.drawNumber(warmup, 100, 24);
+  dispNum.pushSprite(0, 0);
+  // draw label on bottom
+  descText.setTextColor(TFT_WHITE, TFT_BLACK);
+  descText.drawString("Warmup Enrichment", 40, 20);
+  descText.pushSprite(0, 90);
+}
+
 void showAFR() {
   // displays the current AFR and a triangle on the bottom for AFR variance
   float afrVar;
