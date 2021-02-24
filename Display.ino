@@ -21,6 +21,9 @@ void updateDisplay() {
     case MODE_LOOPS:
       showLoops();
       break;
+    case MODE_WARMUP;
+      showWarmup();
+      break;
     default:
       showAFR();
       break;
@@ -34,7 +37,7 @@ void updateDisplay() {
 void showWarmup() {
   // displays warmup enrichment
   dispNum.fillSprite(TFT_BLACK);
-  int warmup = SData.getwarmup();     // Get latest Loops reading
+  int warmup = SData.getWarmup();     // Get latest Loops reading
   warmup = warmup - 100;              // 0 will be no warmup enrichment, 100 will b 100%
   dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
   dispNum.setTextDatum(MC_DATUM);
