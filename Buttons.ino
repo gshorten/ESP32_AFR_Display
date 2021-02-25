@@ -17,7 +17,9 @@ void handleBottomButton(AceButton* button, uint8_t eventType, uint8_t buttonStat
  Serial.print("Bottom Button pressed");
  
  g_Mode ++;       // button push increments mode variable.
- if (g_Mode > 2){
+ if (g_Mode > NUM_MODES){
   g_Mode = 0;   // wrap around
  }
+ // blank screen, gets rid of old display when switching
+ tft.fillScreen(TFT_BLACK);
 }

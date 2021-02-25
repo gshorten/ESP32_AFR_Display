@@ -44,6 +44,7 @@ const byte MODE_AFR = 0;        // display AFR & variance from targeyt
 const byte MODE_EGO = 1;        // display EGO correction
 const byte MODE_LOOPS = 2;      // loops per second
 const byte MODE_WARMUP = 3;
+const int NUM_MODES = 4;
 
 // Serial2 pins
 #define sTX 21    // Serial2 transmit (out), pin J4 on Speeduino connector
