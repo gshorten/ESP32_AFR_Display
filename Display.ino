@@ -21,7 +21,7 @@ void updateDisplay() {
     case MODE_LOOPS:
       showLoops();
       break;
-    case MODE_WARMUP;
+    case MODE_WARMUP:
       showWarmup();
       break;
     default:
