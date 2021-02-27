@@ -10,19 +10,22 @@
    Global variable for display mode
 */
 void updateDisplay() {
-
+  // update the right display based on the current mode
   switch (g_Mode) {
     case MODE_AFR:
-      showAFR();
+      showAFR(afrFreq);
       break;
     case MODE_EGO:
-      showEGO();
+      showEGO(egoFreq);
       break;
     case MODE_LOOPS:
-      showLoops();
+      showLoops(loopsFreq);
       break;
     case MODE_WARMUP:
-      showWarmup();
+      showWarmup(warmupFreq);
+      break;
+    case MODE_GAMMA:
+      showGammaE(gammaFreq);
       break;
     default:
       showAFR();
@@ -30,26 +33,23 @@ void updateDisplay() {
   }
 }
 
-/*!
-   @brief   displays the current AFR and draws and indicator sprit to show the relative variance from the target AFR.
-*/
-
-void showWarmup() {
+void showWarmup(int freq) {
   // displays warmup enrichment
   dispNum.fillSprite(TFT_BLACK);
-  int warmup = SData.getWarmup();     // Get latest Loops reading
-  warmup = warmup - 100;              // 0 will be no warmup enrichment, 100 will b 100%
+  int warmup = SData.getWarmup(freq);     // Get latest Loops reading
+  //warmup = warmup -100;              // 0 will be no warmup enrichment, 100 will b 100%
   dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
   dispNum.setTextDatum(MC_DATUM);
   dispNum.drawNumber(warmup, 100, 24);
   dispNum.pushSprite(0, 0);
   // draw label on bottom
   descText.setTextColor(TFT_WHITE, TFT_BLACK);
-  descText.drawString("Warmup Enrichment", 40, 20);
+  descText.drawString("Warmup", 40, 20);
   descText.pushSprite(0, 90);
+  showFreq(freq);       // display frequency at bottom right
 }
 
-void showAFR() {
+void showAFR(int freq) {
   // displays the current AFR and a triangle on the bottom for AFR variance
   float afrVar;
   static byte oldPos;
@@ -58,8 +58,8 @@ void showAFR() {
   float targetAFR;
 
   // get actual and target afr, use SpeedData library (instance is SData)
-  actualAFR = SData.getActualAFR();
-  targetAFR = SData.getTargetAFR();
+  actualAFR = SData.getActualAFR(freq);
+  targetAFR = SData.getTargetAFR(freq);
 
   // Set colours for Actual AFR depending on value.
   if (actualAFR > 16.0 || actualAFR < 12.0) {
@@ -100,11 +100,16 @@ void showAFR() {
     afrVarInd.pushSprite(indPosition, 85, TFT_TRANSPARENT);
     oldPos = indPosition;
   }
+  // display frequency at bottom right
+  tft.setTextColor(TFT_WHITE, TFT_BLUE);
+  tft.setTextFont(4);
+  tft.drawNumber(afrFreq, 210, 110);
 }
 
-void showEGO() {
+void showEGO(int freq) {
   // displays the EGO Correction value on the display
-  long EGO = SData.getEGO();
+
+  long EGO = SData.getEGO(freq);
   //dispNum.fillSprite(TFT_BLACK);
 
   if (EGO > 115) {
@@ -134,14 +139,15 @@ void showEGO() {
   // draw label on bottom
   descText.setTextDatum(MC_DATUM);
   descText.setTextColor(TFT_WHITE, TFT_BLACK);
-  descText.drawString("EGO Correction %", 100, 20);
+  descText.drawString("EGO Corr", 40, 20);
   descText.pushSprite(0, 90);
+  showFreq(freq);       // display frequency at bottom right
 }
 
-void showLoops() {
+void showLoops(int freq) {
   // show the loops per second display
   dispNum.fillSprite(TFT_BLACK);
-  int loopsPS = SData.getLoops();     // Get latest Loops reading
+  int loopsPS = SData.getLoops(freq);     // Get latest Loops reading
 
   dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
   dispNum.setTextDatum(MC_DATUM);
@@ -149,6 +155,32 @@ void showLoops() {
   dispNum.pushSprite(0, 0);
   // draw label on bottom
   descText.setTextColor(TFT_WHITE, TFT_BLACK);
-  descText.drawString("Loops Per Second", 40, 20);
+  descText.drawString("Loops", 40, 20);
   descText.pushSprite(0, 90);
+  showFreq(freq);       // display frequency at bottom right
+}
+
+void showGammaE(int freq) {
+  // show the total fuel enrichment (GammaE);
+  dispNum.fillSprite(TFT_BLACK);
+  int gammaE = SData.getGammaE(freq);     // Get latest gammaE reading
+
+  dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
+  dispNum.setTextDatum(MC_DATUM);
+  dispNum.drawNumber(gammaE, 100, 24);
+  dispNum.pushSprite(0, 0);
+  // draw label on bottom
+  descText.setTextColor(TFT_WHITE, TFT_BLACK);
+  descText.drawString("GammaE", 40, 20);
+  descText.pushSprite(0, 90);
+
+  showFreq(freq);       // display frequency at bottom right
+
+}
+
+void showFreq(int freq) {
+  // display frequency at bottom right
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.setTextFont(4);
+  tft.drawNumber(freq, 210, 110);
 }

@@ -7,44 +7,53 @@
 #include <TFT_eSPI.h>
 #include <SPI.h>
 #include <User_Setup.h>          // TFT display configuration file
-#include <AceButton.h>          // for the encoder button
+#include <EasyButton.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include <SpeedData.h>      
+#include <SpeedData.h>
 #include "arduino_secrets.h"
 
-/*! 
- * @brief   Define two buttons, different configurations for each.
- */
-using namespace ace_button;
-const uint8_t TOP_BUTTON = 0;       //!< on board button above the USB-C port
-const uint8_t BOTTOM_BUTTON = 35;   //!< on board button below the USB-C port
-ButtonConfig topConfig;
-ButtonConfig bottomConfig;
-AceButton topButton(&topConfig);
-AceButton bottomButton(&bottomConfig);
+/*!
+   @brief   Define two buttons, different configurations for each.
+*/
+
+const uint8_t TOP_BUTTON_PIN = 0;       //!< on board button above the USB-C port
+const uint8_t BOTTOM_BUTTON_PIN = 35;   //!< on board button below the USB-C port
+
+EasyButton topButton(TOP_BUTTON_PIN);
+EasyButton bottomButton(BOTTOM_BUTTON_PIN);
 
 // SpeedData object to get data from the speeduino.  Using Serial2 (defined in setup)
 // use reference operator ("&")!
 SpeedData SData(&Serial2);
 
-// wifi 
+// wifi
 char* ssid = SECRET_SSID;
 char* password = SECRET_PWD;
 
 // tft display buffer
-uint16_t* tft_buffer = (uint16_t*) malloc( 26000 );  
+uint16_t* tft_buffer = (uint16_t*) malloc( 26000 );
 bool      buffer_loaded = false;
 
-// Mode constants
+// Mode constants, set what will be displayed on the gauge
 byte g_Mode = 0;
 const byte MODE_AFR = 0;        // display AFR & variance from targeyt
 const byte MODE_EGO = 1;        // display EGO correction
 const byte MODE_LOOPS = 2;      // loops per second
-const byte MODE_WARMUP = 3;
-const int NUM_MODES = 4;
+const byte MODE_WARMUP = 3;     // warmup enrichment
+const byte MODE_GAMMA = 4;      // total enrichment (GammaE)
+const byte MODE_ACCEL = 5;      // acceleration enrichment
+
+const int NUM_MODES = 5;
+
+//update frequencies
+int warmupFreq = 200;
+int egoFreq = 200;
+int loopsFreq = 250;
+int afrFreq = 250;
+int gammaFreq = 250;
 
 // Serial2 pins
 #define sTX 21    // Serial2 transmit (out), pin J4 on Speeduino connector
@@ -58,12 +67,20 @@ TFT_eSprite dispNum = TFT_eSprite(&tft);       // the big number displayed at to
 TFT_eSprite afrVarInd = TFT_eSprite(&tft);     // the AFR variance indicator
 TFT_eSprite descText = TFT_eSprite(&tft);     // text displayed underneath the big number
 
+// ****************************Function Prototypes *******************
+void showWarmup(int freq = 200);
+void showAFR(int freq = 200);
+void showEGO(int freq = 200);
+void showLoops(int freq = 250);
+void showGammaE(int freq = 200);
+
+
 void setup() {
   Serial.begin(115200);
   Serial2.begin(115200, SERIAL_8N1, sRX, sTX); //Serial port for connecting to Speeduino
   Serial.println("Start");
-  
-    // connnect to wifi
+
+  // connnect to wifi
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -112,20 +129,12 @@ void setup() {
   tft.setCursor(0, 0);
   tft.setTextDatum(MC_DATUM);
 
-  //Setup buttons.  the TTGO ESP 32 module has two built in buttons (plus a reset).
-  pinMode(TOP_BUTTON, INPUT_PULLUP);
-  pinMode(BOTTOM_BUTTON, INPUT_PULLUP);
+  // Setup buttons
+  topButton.begin();
+  bottomButton.begin();
+  topButton.onPressed(handleTopButton);
+  bottomButton.onPressed(handleBottomButton);
 
-  topButton.init(TOP_BUTTON);
-  bottomButton.init(BOTTOM_BUTTON);
-
-  // cofigure both buttons for simple clicks, seperate handlers for each.
-  topConfig.setEventHandler(handleTopButton);       // top button event handler
-  topConfig.setFeature(ButtonConfig::kFeatureClick);
-
-  bottomConfig.setEventHandler(handleBottomButton);    // bottom button event handler
-  bottomConfig.setFeature(ButtonConfig::kFeatureClick);
- 
   // create sprite for numeric display
   dispNum.setTextFont(8);
   dispNum.createSprite(240, 85);
@@ -141,7 +150,7 @@ void setup() {
 
   // create sprite for text at bottom of screen (instead of AFR Variance Indicator)
   descText.setTextFont(4);
-  descText.createSprite(240, 55);       //width, height
+  descText.createSprite(180, 55);       //width, height
   descText.fillSprite(TFT_BLACK);
   descText.setTextColor(TFT_WHITE, TFT_BLACK);
   descText.setTextDatum(MC_DATUM);
@@ -149,7 +158,7 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();
-  updateDisplay();              
-  topButton.check();
-  bottomButton.check();
+  updateDisplay();
+  topButton.read();
+  bottomButton.read();
 }
