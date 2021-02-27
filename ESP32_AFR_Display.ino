@@ -62,19 +62,20 @@ int gammaFreq = 250;
 // define display
 TFT_eSPI tft = TFT_eSPI(135, 240);
 
-// make sprite objects
+// make sprites
 TFT_eSprite dispNum = TFT_eSprite(&tft);       // the big number displayed at top of screen
 TFT_eSprite afrVarInd = TFT_eSprite(&tft);     // the AFR variance indicator
 TFT_eSprite descText = TFT_eSprite(&tft);     // text displayed underneath the big number
+TFT_eSprite dispFreq = TFT_eSprite(&tft);     // displays the update frequency
 
-// ****************************Function Prototypes *******************
+// **************************** Function Prototypes *******************
 void showWarmup(int freq = 200);
 void showAFR(int freq = 200);
 void showEGO(int freq = 200);
 void showLoops(int freq = 250);
 void showGammaE(int freq = 200);
 
-
+//****************************** Setup *******************************
 void setup() {
   Serial.begin(115200);
   Serial2.begin(115200, SERIAL_8N1, sRX, sTX); //Serial port for connecting to Speeduino
@@ -129,31 +130,40 @@ void setup() {
   tft.setCursor(0, 0);
   tft.setTextDatum(MC_DATUM);
 
-  // Setup buttons
+  // Initialize buttons
   topButton.begin();
   bottomButton.begin();
   topButton.onPressed(handleTopButton);
   bottomButton.onPressed(handleBottomButton);
 
-  // create sprite for numeric display
+
+  //**************** Initialize Sprites ****************
+  // Initialize sprite for numeric display
   dispNum.setTextFont(8);
   dispNum.createSprite(240, 85);
   dispNum.fillSprite(TFT_BLACK);
-  dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
+  dispNum.setTextColor(TFT_WHITE);
   dispNum.setTextDatum(MC_DATUM);
 
-  // create sprite for AFR variance indicator
+  // Initialize sprite for AFR variance indicator
   afrVarInd.createSprite(40, 50);
   afrVarInd.fillSprite(TFT_TRANSPARENT);
+  // greenyellow triangle with black border
   afrVarInd.fillTriangle(20, 0, 0, 50, 40, 50, TFT_BLACK);
   afrVarInd.fillTriangle(20, 5, 3, 47, 37, 47, TFT_GREENYELLOW);
 
-  // create sprite for text at bottom of screen (instead of AFR Variance Indicator)
+  // Initialize sprite for text at bottom of screen (instead of AFR Variance Indicator)
   descText.setTextFont(4);
   descText.createSprite(180, 55);       //width, height
   descText.fillSprite(TFT_BLACK);
   descText.setTextColor(TFT_WHITE, TFT_BLACK);
-  descText.setTextDatum(MC_DATUM);
+  descText.setTextDatum(TL_DATUM);
+
+  // sprite to show update frequency at right of screen
+  dispFreq.setTextFont(4);
+  dispFreq.createSprite(60,55);
+  dispFreq.setTextColor(TFT_WHITE);
+  dispFreq.setTextDatum(TL_DATUM);    // text datum is at top left 
 }
 
 void loop() {

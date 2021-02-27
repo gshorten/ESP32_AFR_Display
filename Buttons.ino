@@ -38,7 +38,7 @@ void handleBottomButton() {
   // cycle through modes when down button is pressed.  This changes the display shown
   Serial.print("Bottom Button pressed");
   // blank screen, gets rid of old display when switching
-  tft.fillScreen(TFT_BLACK);
+  //tft.fillScreen(TFT_BLACK);
   descText.fillSprite(TFT_BLACK);
   g_Mode ++;       // button push increments mode variable.
   if (g_Mode > NUM_MODES-1) {
