@@ -67,6 +67,7 @@ TFT_eSprite dispNum = TFT_eSprite(&tft);       // the big number displayed at to
 TFT_eSprite afrVarInd = TFT_eSprite(&tft);     // the AFR variance indicator
 TFT_eSprite descText = TFT_eSprite(&tft);     // text displayed underneath the big number
 TFT_eSprite dispFreq = TFT_eSprite(&tft);     // displays the update frequency
+TFT_eSprite afrBar = TFT_eSprite(&tft);       // sprite for the AFR bar
 
 // **************************** Function Prototypes *******************
 void showWarmup(int freq = 200);
@@ -143,7 +144,7 @@ void setup() {
   dispNum.createSprite(240, 85);
   dispNum.fillSprite(TFT_BLACK);
   dispNum.setTextColor(TFT_WHITE);
-  dispNum.setTextDatum(MC_DATUM);
+  dispNum.setTextDatum(TL_DATUM);
 
   // Initialize sprite for AFR variance indicator
   afrVarInd.createSprite(40, 50);
@@ -164,6 +165,12 @@ void setup() {
   dispFreq.createSprite(60,55);
   dispFreq.setTextColor(TFT_WHITE);
   dispFreq.setTextDatum(TL_DATUM);    // text datum is at top left 
+
+  // sprite to show AFR bar
+  afrBar.createSprite(240,55);
+  afrBar.fillRect(0, 0, 120, 55, TFT_RED);
+  afrBar.fillRect(120, 0, 120, 55, TFT_BLUE);
+
 }
 
 void loop() {
