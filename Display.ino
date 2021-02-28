@@ -27,8 +27,10 @@ void updateDisplay() {
     case MODE_GAMMA:
       showGammaE(gammaFreq);
       break;
+    case MODE_MAP:
+      showMAP(mapFreq);
     default:
-      showAFR();
+      showAFR(afrFreq);
       break;
   }
 }
@@ -44,6 +46,20 @@ void showWarmup(int freq) {
   // draw label on bottom
   descText.setTextColor(TFT_WHITE, TFT_BLACK);
   descText.drawString("Warmup", 10, 10);
+  descText.pushSprite(0, 90);
+  showFreq(freq);       // display frequency at bottom right
+}
+
+void showMAP(int freq){
+   // displays Manifold Air Pressure (MAP)
+  dispNum.fillSprite(TFT_BLACK);
+  int value = SData.getMAP(freq);     // Get latest MAP reading
+  dispNum.setTextColor(TFT_WHITE, TFT_BLACK);
+  dispNum.drawNumber(value, 45, 0);
+  dispNum.pushSprite(0, 0);
+  // draw label on bottom
+  descText.setTextColor(TFT_WHITE, TFT_BLACK);
+  descText.drawString("MAP", 10, 10);
   descText.pushSprite(0, 90);
   showFreq(freq);       // display frequency at bottom right
 }

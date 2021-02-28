@@ -34,7 +34,7 @@ char* ssid = SECRET_SSID;
 char* password = SECRET_PWD;
 
 // tft display buffer
-uint16_t* tft_buffer = (uint16_t*) malloc( 26000 );
+uint16_t* tft_buffer = (uint16_t*) malloc( 34000 );
 bool      buffer_loaded = false;
 
 // Mode constants, set what will be displayed on the gauge
@@ -44,7 +44,8 @@ const byte MODE_EGO = 1;        // display EGO correction
 const byte MODE_LOOPS = 2;      // loops per second
 const byte MODE_WARMUP = 3;     // warmup enrichment
 const byte MODE_GAMMA = 4;      // total enrichment (GammaE)
-const byte MODE_ACCEL = 5;      // acceleration enrichment
+const byte MODE_MAP = 5;      // acceleration enrichment
+const byte MODE_ACCEL = 6;        // manifold air pressure
 
 const int NUM_MODES = 5;
 
@@ -54,6 +55,8 @@ int egoFreq = 200;
 int loopsFreq = 250;
 int afrFreq = 250;
 int gammaFreq = 250;
+int accelFreq = 250;
+int mapFreq = 250;
 
 // Serial2 pins
 #define sTX 21    // Serial2 transmit (out), pin J4 on Speeduino connector
@@ -170,7 +173,6 @@ void setup() {
   afrBar.createSprite(240,55);
   afrBar.fillRect(0, 0, 120, 55, TFT_RED);
   afrBar.fillRect(120, 0, 120, 55, TFT_BLUE);
-
 }
 
 void loop() {
